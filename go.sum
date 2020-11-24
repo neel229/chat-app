@@ -1,2 +1,4 @@
 github.com/gorilla/websocket v1.4.2 h1:+/TMaTYc4QFitKJxsQ7Yye35DkWvkdLcvGKqM+x0Ufc=
 github.com/gorilla/websocket v1.4.2/go.mod h1:YR8l580nyteQvAITg2hZ9XVh4b55+EU/adAjf1fMHhE=
+github.com/neel229/tracing v0.0.0-20201124091950-7ea81ecd25ed h1:Y279mMWQTBrpq/Pg0gGuxGu2R4kKFgQ4Fv3hEqh46qs=
+github.com/neel229/tracing v0.0.0-20201124091950-7ea81ecd25ed/go.mod h1:FX++/yvGIHEtu5zpoSEA1B5AqJCH/jm07kBSrdob0sU=

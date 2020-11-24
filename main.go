@@ -4,9 +4,12 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"path/filepath"
 	"sync"
 	"text/template"
+
+	tracer "github.com/neel229/tracing"
 )
 
 type templateHandler struct {
@@ -27,6 +30,7 @@ func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func main() {
 	// Create a new room
 	r := newRoom()
+	r.tracer = tracer.New(os.Stdout)
 
 	// Root Path
 	http.Handle("/", &templateHandler{filename: "chat.html"})
