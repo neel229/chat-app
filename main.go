@@ -10,6 +10,13 @@ import (
 	"text/template"
 
 	tracer "github.com/neel229/tracing"
+	"github.com/stretchr/gomniauth"
+	"github.com/stretchr/gomniauth/providers/google"
+)
+
+const (
+	key    string = "725697710987-pj9hmpg8q7cls962skjbjs0v6v12diuj.apps.googleusercontent.com"
+	secret string = "qrtOYbS--627XhkM0CSEZ5Me"
 )
 
 type templateHandler struct {
@@ -28,6 +35,12 @@ func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	// OAuth setup
+	gomniauth.SetSecurityKey("GcRcm0HhPeCjUK9Kdahy9rnYNxJ3olhDOPZXnFnfb2Y3NmFpE1NAoQvl6sZ9GGzf")
+	gomniauth.WithProviders(
+		google.New(key, secret, "https://localhost:8080/auth/callback/google"),
+	)
+
 	// Create a new room
 	r := newRoom()
 	r.tracer = tracer.New(os.Stdout)
@@ -38,6 +51,8 @@ func main() {
 	// Login Path
 	http.Handle("/login", &templateHandler{filename: "login.html"})
 
+	// Auth
+	http.HandleFunc("/auth/", loginHandler)
 	// Start the room
 	http.Handle("/room", r)
 	go r.run()
