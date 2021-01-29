@@ -12,6 +12,7 @@ import (
 	tracer "github.com/neel229/tracing"
 	"github.com/stretchr/gomniauth"
 	"github.com/stretchr/gomniauth/providers/google"
+	"github.com/stretchr/objx"
 )
 
 const (
@@ -29,8 +30,14 @@ func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	t.once.Do(func() {
 		t.temp = template.Must(template.ParseFiles(filepath.Join("templates", t.filename)))
 	})
-	if err := t.temp.Execute(w, nil); err != nil {
-		log.Fatal("Error executing the Template provided")
+	data := map[string]interface{}{
+		"Host": r.Host,
+	}
+	if authCookie, err := r.Cookie("auth"); err == nil {
+		data["UserData"] = objx.MustFromBase64(authCookie.Value)
+	}
+	if err := t.temp.Execute(w, data); err != nil {
+		log.Fatalf("There was an error executing the template: %v", err)
 	}
 }
 
@@ -38,7 +45,7 @@ func main() {
 	// OAuth setup
 	gomniauth.SetSecurityKey("GcRcm0HhPeCjUK9Kdahy9rnYNxJ3olhDOPZXnFnfb2Y3NmFpE1NAoQvl6sZ9GGzf")
 	gomniauth.WithProviders(
-		google.New(key, secret, "https://localhost:8080/auth/callback/google"),
+		google.New(key, secret, "http://localhost:8080/auth/callback/google"),
 	)
 
 	// Create a new room
